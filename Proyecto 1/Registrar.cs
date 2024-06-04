@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 
 namespace Proyecto_1
 {
@@ -37,13 +38,23 @@ namespace Proyecto_1
             try
             {
                 conexion.Open();
-                string query = "insert into Usuarios Values(@user,@pass)";
+                string usuario = txtUser.Text;
+                string contrasena = txtPass.Text;
+
+                if (!ValidarContrasena(contrasena))
+                {
+                    MessageBox.Show("La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un carácter especial y un número.");
+                    return;
+                }
+
+                string query = "INSERT INTO Usuarios VALUES (@user, @pass)";
                 SqlCommand comando = new SqlCommand(query, conexion);
-                comando.Parameters.AddWithValue("@user",txtUser.Text);
-                comando.Parameters.AddWithValue("@pass", txtPass.Text);
+
+                comando.Parameters.AddWithValue("@user", usuario);
+                comando.Parameters.AddWithValue("@pass", contrasena);
                 comando.ExecuteNonQuery();
                 conexion.Close();
-                MessageBox.Show("Se guardo");
+                MessageBox.Show("Se guardó correctamente.");
                 this.Hide();
                 Login view = new Login();
                 view.Show();
@@ -53,6 +64,28 @@ namespace Proyecto_1
                 MessageBox.Show("No se inserto");
             }
         }
+
+        private bool ValidarContrasena(string contrasena)
+        {
+            // Al menos una letra mayúscula
+            if (!Regex.IsMatch(contrasena, @"[A-Z]"))
+                return false;
+
+            // Al menos una letra minúscula
+            if (!Regex.IsMatch(contrasena, @"[a-z]"))
+                return false;
+
+            // Al menos un carácter especial
+            if (!Regex.IsMatch(contrasena, @"[!@#$%^&*()_+=\[{\]};:<>|./?,-]"))
+                return false;
+
+            // Al menos un número
+            if (!Regex.IsMatch(contrasena, @"\d"))
+                return false;
+
+            return true;
+        }
+
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {

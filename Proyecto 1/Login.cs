@@ -13,7 +13,7 @@ namespace Proyecto_1
 {
     public partial class Login : Form
     {
-        SqlConnection conexion = new SqlConnection("server=DESKTOP-6NJDFKT\\SQLEXPRESS; database= Proyecto_1; integrated security = true");
+        SqlConnection conexion = new SqlConnection("server=ROG\\DARWINPC; database= Proyecto_1; integrated security = true");
         public Login()
         {
             InitializeComponent();
@@ -65,6 +65,11 @@ namespace Proyecto_1
             this.Hide();
             Registrar view = new Registrar();
             view.Show();
+        }
+
+        private void txtUser_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
